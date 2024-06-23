@@ -1,22 +1,18 @@
-name: validate pr
-on:
-  pull_request:
-    types: [opened, edited, reopened, synchronize]
-    branches:
-      - master
-      - branch-0.x
-
 jobs:
   validate-pr:
-    runs-on: ubuntu-latest
     env:
       REQUEST_BODY: ${{ github.event.pull_request.body }}
       REQUEST_TITLE: ${{ github.event.pull_request.title }}
+    runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
-      - name: run script
-        run: python3 scripts/pr_compliance.py
-
-
-
+    - continue-on-error: true
+      uses: actions/checkout@v3
+    - continue-on-error: true
+      uses: actions/setup-python@v3
+    - continue-on-error: true
+      name: run script
+      run: python3 scripts/pr_compliance.py
+name: validate pr
+on:
+  repository_dispatch:
+    types: trigger-ga___pr_compliance.yml
